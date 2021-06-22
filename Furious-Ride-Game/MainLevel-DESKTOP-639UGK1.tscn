@@ -1,0 +1,152 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Game_Design_4.png" type="Texture" id=2]
+[ext_resource path="res://sounds/car1.wav" type="AudioStream" id=3]
+[ext_resource path="res://Scripts/EnemySpawn.gd" type="Script" id=4]
+[ext_resource path="res://sounds/shoot.wav" type="AudioStream" id=5]
+[ext_resource path="res://sounds/Theme.wav" type="AudioStream" id=6]
+[ext_resource path="res://Scripts/Laps.gd" type="Script" id=7]
+[ext_resource path="res://Echotopia-Regular.otf" type="DynamicFontData" id=8]
+[ext_resource path="res://Scripts/Timer.gd" type="Script" id=9]
+[ext_resource path="res://Scripts/highscore.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/Wall.gd" type="Script" id=11]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[sub_resource type="DynamicFont" id=2]
+size = 36
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
+font_data = ExtResource( 8 )
+
+[node name="MainLevel" type="Node2D"]
+__meta__ = {
+"_edit_vertical_guides_": [ -3.79025 ]
+}
+
+[node name="Backdrop" type="Sprite" parent="."]
+position = Vector2( 514.5, 298 )
+scale = Vector2( 1.41806, 1.25 )
+texture = ExtResource( 2 )
+
+[node name="Wall" type="StaticBody2D" parent="Backdrop"]
+position = Vector2( 169.105, -0.441788 )
+scale = Vector2( 0.971796, 24.104 )
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Backdrop/Wall"]
+position = Vector2( 0.937805, 0.0857849 )
+shape = SubResource( 1 )
+
+[node name="Wall2" type="StaticBody2D" parent="Backdrop"]
+position = Vector2( -167.297, -1.47566 )
+scale = Vector2( 0.971796, 24.104 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Backdrop/Wall2"]
+shape = SubResource( 1 )
+
+[node name="Wall3" type="StaticBody2D" parent="Backdrop"]
+position = Vector2( 0.915009, 245.334 )
+rotation = 1.56717
+scale = Vector2( 0.971796, 36.1966 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Backdrop/Wall3"]
+shape = SubResource( 1 )
+
+[node name="Wall4" type="StaticBody2D" parent="Backdrop"]
+position = Vector2( -0.82309, -246.184 )
+rotation = 1.56717
+scale = Vector2( 0.971796, 36.1966 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Backdrop/Wall4"]
+shape = SubResource( 1 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 535.482, 539.003 )
+
+[node name="Enemy" type="Node" parent="Player"]
+script = ExtResource( 4 )
+
+[node name="EnemyTimer" type="Timer" parent="Player/Enemy"]
+wait_time = 3.0
+autostart = true
+
+[node name="Audio_Effect" type="Node" parent="Player"]
+
+[node name="bullets" type="AudioStreamPlayer2D" parent="Player/Audio_Effect"]
+stream = ExtResource( 5 )
+
+[node name="carDriving" type="AudioStreamPlayer2D" parent="Player/Audio_Effect"]
+stream = ExtResource( 3 )
+
+[node name="ThemeMusic" type="AudioStreamPlayer2D" parent="Player/Audio_Effect"]
+stream = ExtResource( 6 )
+autoplay = true
+
+[node name="Timer" type="RichTextLabel" parent="."]
+margin_left = 800.0
+margin_top = 13.0
+margin_right = 1019.0
+margin_bottom = 85.0
+custom_fonts/normal_font = SubResource( 2 )
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+text = "Time: 0:0"
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="Timer"]
+wait_time = 0.1
+autostart = true
+__meta__ = {
+"_editor_description_": "Time: 0:0"
+}
+
+[node name="Laps" type="RichTextLabel" parent="Timer"]
+margin_left = 4.15784
+margin_top = 102.106
+margin_right = 43.1578
+margin_bottom = 142.106
+text = "Lap: "
+script = ExtResource( 7 )
+
+[node name="Control" type="Control" parent="."]
+margin_left = 802.0
+margin_top = 66.0
+margin_right = 1013.0
+margin_bottom = 131.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="highscore" type="Label" parent="Control"]
+margin_right = 212.0
+margin_bottom = 55.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Highscore: 0"
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="tree_entered" from="." to="Player" method="_on_MainLevel_tree_entered"]
+[connection signal="tree_entered" from="." to="Player/Enemy" method="_on_MainLevel_tree_entered"]
+[connection signal="tree_entered" from="Player/Enemy" to="Player" method="_on_Enemy_tree_entered"]
+[connection signal="timeout" from="Player/Enemy/EnemyTimer" to="Player/Enemy" method="_on_EnemyTimer_timeout"]
+[connection signal="timeout" from="Timer/Timer" to="Timer" method="_on_Timer_timeout"]

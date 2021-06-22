@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Art/MainEnemy.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/MainEnemy.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 24.7038, 23.3963 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 9.42969, 9.35268 )
+
+[node name="MainEnemy" type="Node2D"]
+
+[node name="Enemy" type="KinematicBody2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="MainEnemy" type="Sprite" parent="Enemy"]
+position = Vector2( 0.38002, -2.20866 )
+texture = ExtResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="Enemy"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/Area2D"]
+position = Vector2( -7.62939e-06, -2.93088 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
+position = Vector2( 0.209343, -3.82118 )
+scale = Vector2( 2.19797, 1.92512 )
+shape = SubResource( 2 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="Enemy"]
+position = Vector2( 0.5, -3 )
+scale = Vector2( 1.55, 2.3 )
+[connection signal="body_entered" from="Enemy/Area2D" to="Enemy" method="_on_Area2D_body_entered"]
+[connection signal="viewport_exited" from="Enemy/VisibilityNotifier2D" to="Enemy" method="_on_VisibilityNotifier2D_viewport_exited"]
